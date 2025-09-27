@@ -9,6 +9,8 @@ import { useAuth } from './contexts/AuthContext';
 import Landing from './pages/Landing';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import SignUp from './pages/SignUp';
+import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Quiz from './pages/Quiz';
 import TripPlanning from './pages/TripPlanning';
@@ -87,8 +89,8 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       console.log('PublicRoute - No travel profile, redirecting to quiz');
       return <Navigate to="/quiz" replace />;
     } else {
-      console.log('PublicRoute - Has travel profile, redirecting to dashboard');
-      return <Navigate to="/dashboard" replace />;
+      console.log('PublicRoute - Has travel profile, redirecting to home');
+      return <Navigate to="/home" replace />;
     }
   }
   
@@ -104,9 +106,16 @@ function AppRoutes() {
         <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
         <Route path="/how-it-works" element={<PublicRoute><HowItWorks /></PublicRoute>} />
         
         {/* Protected Routes */}
+        <Route path="/home" element={
+          <SmartRoute>
+            <Home />
+          </SmartRoute>
+        } />
+        
         <Route path="/dashboard" element={
           <SmartRoute>
             <Layout>
@@ -123,6 +132,9 @@ function AppRoutes() {
         
         {/* Test route to check if Quiz loads */}
         <Route path="/test-quiz" element={<Quiz />} />
+        
+        {/* Test route to check if Home loads */}
+        <Route path="/test-home" element={<Home />} />
         
         <Route path="/plan-trip" element={
           <SmartRoute>

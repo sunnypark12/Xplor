@@ -1,4 +1,5 @@
 /* Reset and base styles */
+/* index.css */
 * {
   margin: 0;
   padding: 0;
@@ -661,4 +662,10 @@ select:focus-visible {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-gray-400);
+}
+
+/* Override global background for SignUp page */
+body:has(.signup-page) {
+  background-image: none !important;
+  background-color: transparent !important;
 }
