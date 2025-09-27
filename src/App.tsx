@@ -13,6 +13,7 @@ import Dashboard from './pages/Dashboard';
 import Quiz from './pages/Quiz';
 import TripPlanning from './pages/TripPlanning';
 import Itinerary from './pages/Itinerary';
+import HowItWorks from './pages/HowItWorks';
 import Profile from './pages/Profile';
 
 // Layout component
@@ -103,6 +104,7 @@ function AppRoutes() {
         <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/how-it-works" element={<PublicRoute><HowItWorks /></PublicRoute>} />
         
         {/* Protected Routes */}
         <Route path="/dashboard" element={
