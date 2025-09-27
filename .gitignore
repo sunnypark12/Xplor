@@ -32,4 +32,9 @@ ui-debug.log
 .env
 .env.local
 
+# AI Data Cache - large datasets that can be downloaded
+ai/data_cache/
+*.parquet
+*.arrow
+*.lock
 
