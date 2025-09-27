@@ -171,3 +171,5 @@ export interface TravelContextType {
   saveTravelProfile: (profile: TravelProfile) => Promise<void>;
   updateUserLocation: (location: UserLocation) => void;
 }
+
+

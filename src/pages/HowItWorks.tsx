@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MapPin, Zap, Users, Star } from 'lucide-react';
 import Button from '../components/common/Button';
