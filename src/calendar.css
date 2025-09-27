@@ -1,0 +1,78 @@
+/* Custom styles for react-calendar to match glassmorphism theme */
+.react-calendar {
+  background: transparent !important;
+  border: none !important;
+  font-family: inherit !important;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.react-calendar__navigation button {
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
+  font-size: 0.75rem !important;
+  padding: 0.25rem !important;
+  border-radius: 0.25rem !important;
+  transition: background-color 0.2s !important;
+}
+
+.react-calendar__navigation button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.react-calendar__navigation__label {
+  color: white !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+}
+
+.react-calendar__month-view__weekdays {
+  margin-bottom: 0.5rem;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 0.75rem !important;
+  text-align: center !important;
+  padding: 0.25rem 0 !important;
+}
+
+.react-calendar__tile {
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
+  font-size: 0.75rem !important;
+  padding: 0.25rem !important;
+  border-radius: 0.25rem !important;
+  transition: all 0.2s !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.react-calendar__tile:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.react-calendar__tile--active {
+  background: #3b82f6 !important;
+  color: white !important;
+}
+
+.react-calendar__tile--now {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}
+
+.react-calendar__tile--hasActive {
+  background: #3b82f6 !important;
+  color: white !important;
+}

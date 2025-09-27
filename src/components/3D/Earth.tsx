@@ -1,5 +1,4 @@
 import React, { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
 import { Sphere, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -55,12 +54,6 @@ const Earth: React.FC<EarthProps> = ({ position = [0, 0, 0], scale = 1 }) => {
     
     return new THREE.CanvasTexture(canvas);
   }, []);
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.005;
-    }
-  });
 
   return (
     <Sphere ref={meshRef} args={[1, 64, 64]} position={position} scale={scale}>
