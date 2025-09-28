@@ -16,11 +16,32 @@ const Landing: React.FC = () => {
       {/* Top bar */}
       <div className="relative z-10 w-full px-10 py-10 flex justify-between items-center text-white">
         <h1 className="text-3xl font-bold play-regular" style={{ fontSize: "1.5rem", marginLeft: "20px", marginTop: "10px" }}>Xplor</h1>
-        <Link
-          to="/how-it-works"
-          className="bg-white/20 hover:bg-white/30 rounded-full p-2 transition"
-        >
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            to="/how-it-works"
+            className="bg-white/20 hover:bg-white/30 rounded-full p-2 transition flex items-center justify-center"
+            title="How it works"
+            style={{ marginRight: "10px" }}
+          >
+            <img 
+              src="./src/question.png" 
+              alt="How it works" 
+              className="w-6 h-6"
+            />
+          </Link>
+          <Link
+            to="/profile"
+            className="bg-white/20 hover:bg-white/30 rounded-full p-2 transition flex items-center justify-center"
+            title="Profile"
+            style={{ marginRight: "20px" }}
+          >
+            <img 
+              src="./src/profile.png" 
+              alt="Profile" 
+              className="w-6 h-6"
+            />
+          </Link>
+        </div>
       </div>
 
       {/* Main content */}
