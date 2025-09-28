@@ -1,353 +1,212 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { Calendar, Users, MapPin, Plus, X } from 'lucide-react';
-import { useTravel } from '../contexts/TravelContext';
-import { TripInput, TripConstraint } from '../types';
-import Button from '../components/common/Button';
-import Input from '../components/common/Input';
+import { Link } from 'react-router-dom';
+import profileImg from '../profile.png';
 
-interface TripPlanningFormData {
-  destination: string;
-  startDate: string;
-  endDate: string;
-  travelers: number;
-  budget: number;
-  accommodation: string;
-  specialInterests: string;
-}
+type Activity = {
+  id: string;
+  time: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  image?: string;
+};
 
 const TripPlanning: React.FC = () => {
-  const navigate = useNavigate();
-  const { createItinerary, travelProfile } = useTravel();
-  const [constraints, setConstraints] = useState<TripConstraint[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const tabs = ['Day One', 'Day Two', 'Day Three'];
+  const [activeTab, setActiveTab] = useState(0);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    setError
-  } = useForm<TripPlanningFormData>();
-
-  const startDate = watch('startDate');
-
-  const addConstraint = (type: TripConstraint['type'], description: string) => {
-    if (description.trim()) {
-      setConstraints([...constraints, { type, description: description.trim() }]);
-    }
-  };
-
-  const removeConstraint = (index: number) => {
-    setConstraints(constraints.filter((_, i) => i !== index));
-  };
-
-  const onSubmit = async (data: TripPlanningFormData) => {
-    try {
-      setIsSubmitting(true);
-
-      const tripInput: TripInput = {
-        destination: data.destination,
-        startDate: new Date(data.startDate),
-        endDate: new Date(data.endDate),
-        travelers: data.travelers,
-        specialInterests: data.specialInterests ? data.specialInterests.split(',').map(s => s.trim()) : [],
-        constraints,
-        budget: data.budget || undefined,
-        accommodation: data.accommodation || undefined
-      };
-
-      await createItinerary(tripInput);
-      navigate('/dashboard');
-    } catch (error: any) {
-      setError('root', {
-        type: 'manual',
-        message: error.message || 'Failed to create itinerary'
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const constraintTypes = [
-    { value: 'mobility', label: 'Mobility Requirements' },
-    { value: 'dietary', label: 'Dietary Restrictions' },
-    { value: 'time', label: 'Time Constraints' },
-    { value: 'other', label: 'Other' }
+  const mockDays: Activity[][] = [
+    [
+      {
+        id: 'a1',
+        time: '04:00 PM - 05:45 PM',
+        title: 'Shopping at COEX Mall',
+        subtitle: "Experience Korea's mall"
+      },
+      {
+        id: 'a2',
+        time: '05:45 PM - 06:00 PM',
+        title: 'Subway to Jamsil Station',
+        subtitle: 'Take line 2 (Green) Train'
+      },
+      {
+        id: 'a3',
+        time: '06:00 PM - 07:30 PM',
+        title: 'Dinner @ BBQ',
+        subtitle: 'Try famous Korea\'s Crispy Fried Chicken and Beer Combo.',
+        description: 'Menu Suggestions: Hwang Geum Olive Chicken, Jamaica Whole Chicken Leg',
+      },
+      {
+        id: 'a4',
+        time: '07:30 PM - 08:00 PM',
+        title: 'Convenience Store Stop',
+        subtitle: 'Grab late night snacks before heading back'
+      }
+    ],
+    [
+      { id: 'b1', time: '09:00 AM - 11:00 AM', title: 'Bukchon Hanok Walk', subtitle: 'Explore traditional village' },
+      { id: 'b2', time: '12:00 PM - 01:30 PM', title: 'Lunch in Insadong', subtitle: 'Try bibimbap & tea houses' }
+    ],
+    [
+      { id: 'c1', time: '10:00 AM - 12:00 PM', title: 'Gyeongbokgung Palace', subtitle: 'Palace tour and museum' }
+    ]
   ];
 
-  return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-primary-600 to-primary-700 p-8 text-white">
-          <h1 className="text-3xl font-bold mb-2">Plan Your Next Adventure</h1>
-          <p className="text-primary-100">
-            Tell us about your trip and we'll create a personalized itinerary just for you.
-          </p>
-        </div>
+  const [days, setDays] = useState<Activity[][]>(mockDays);
+  const [openActionIds, setOpenActionIds] = useState<Set<string>>(new Set());
 
-        {/* Travel Profile Status */}
-        {!travelProfile && (
-          <div className="bg-amber-50 border-b border-amber-200 p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                  <span className="text-amber-600 text-sm">!</span>
+  const handleRemove = (id: string) => {
+    setDays(prev => prev.map((list, idx) => idx !== activeTab ? list : list.filter(a => a.id !== id)));
+  };
+
+  const handleSuggest = (id: string) => {
+    // Placeholder interaction
+    console.info('Suggest an alternative for', id);
+  };
+
+  const toggleActions = (id: string) => {
+    setOpenActionIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  return (
+    <div className="tripplanning-page relative min-h-screen flex flex-col">
+      {/* Main content */}
+      <div className="relative z-10 flex flex-1 px-20 gap-16" style={{ marginTop: '20px', marginLeft: "100px"}}>
+        {/* Left Panel - Trip Details */}
+        <div className="w-2/5 space-y-6">
+          <div className="glass-card p-6" style={{ height: '81vh', marginTop: '30px', marginRight: "70px" , color: '#f1f1f1' }}>
+          <div className="text-white">
+            <h2 className="play-regular" style={{ fontSize: '2rem', marginLeft: '40px' }}>Trip Details:</h2>
+        </div>
+          <div className="mt-4 flex gap-6">
+            <div className="w-40 h-28 bg-white/20 rounded-lg flex items-center justify-center">
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-amber-800">
-                    Complete your travel profile for better recommendations
-                  </p>
-                  <p className="text-sm text-amber-700">
-                    Take our quick quiz to get personalized trip suggestions.
-                  </p>
+            <div className="flex-1 grid grid-cols-2 text-white play-regular justify-end" style={{ marginLeft: '40px' }}>
+              <div className="opacity-80 text-sm">Destination:</div>
+              <div className="text-lg" style={{ fontSize: '25px' }}>South Korea</div>
+              <div className="opacity-80 text-sm">Dates:</div>
+              <div className="text-lg" style={{ fontSize: '25px' }}>Sept 26 - Sept 29</div>
+              <div className="opacity-80 text-sm">Group Size:</div>
+              <div className="text-lg" style={{ fontSize: '25px' }}>Couple</div>
+              <div className="opacity-80 text-sm">Budget:</div>
+              <div className="text-lg" style={{ fontSize: '25px' }}>5,000 USD</div>
+              <div className="opacity-80 text-sm">Occasion:</div>
+              <div className="text-lg" style={{ fontSize: '25px' }}>Anniversary</div>
+            </div>
+          </div>
+          <div className="mt-6">
+            <span
+              className="play-regular text-white cursor-pointer"
+              style={{
+                fontSize: '.9rem',
+                marginLeft: '40px',
+                marginBottom: '20px',
+                display: 'inline-block',
+                textDecoration: 'underline',
+                textDecorationColor: '#ffffff',
+                textDecorationThickness: '2px',
+                textUnderlineOffset: '3px'
+              }}
+            >
+              Edit My Trip
+            </span>
+          </div>
+
+          {/* My Travel Style merged inside */}
+          <div className="mt-8">
+            <div className="text-white">
+              <h3 className="play-regular mb-4" style={{ fontSize: '1.5rem', marginLeft: '40px' }}>My Travel Style:</h3>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex-1 text-white play-regular">
+                <div className="text-lg mb-1" style={{ marginLeft: '40px' }}>The Budget Backpacker</div>
+                <div className="mt-4">
+                  <button className="glass-button play-regular px-4 py-2 rounded-lg text-white text-sm"  style={{ fontSize: '1rem', marginLeft: '40px', width: '40%', height: '40px', marginTop: '80px' }}>Retake Quiz</button>
                 </div>
               </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="border-amber-300 text-amber-700 hover:bg-amber-50"
-                onClick={() => navigate('/quiz')}
-              >
-                Take Quiz
-              </Button>
             </div>
           </div>
-        )}
+        </div>
+      </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-8">
-          {/* Basic Trip Details */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
-              <Input
-                label="Destination"
-                placeholder="e.g., Tokyo, Japan"
-                icon={<MapPin size={16} />}
-                error={errors.destination?.message}
-                {...register('destination', {
-                  required: 'Destination is required'
-                })}
-              />
-            </div>
-
-            <Input
-              label="Start Date"
-              type="date"
-              icon={<Calendar size={16} />}
-              error={errors.startDate?.message}
-              {...register('startDate', {
-                required: 'Start date is required',
-                validate: (value) => {
-                  const selectedDate = new Date(value);
-                  const today = new Date();
-                  today.setHours(0, 0, 0, 0);
-                  return selectedDate >= today || 'Start date must be today or later';
-                }
-              })}
-            />
-
-            <Input
-              label="End Date"
-              type="date"
-              icon={<Calendar size={16} />}
-              error={errors.endDate?.message}
-              {...register('endDate', {
-                required: 'End date is required',
-                validate: (value) => {
-                  if (!startDate) return true;
-                  const start = new Date(startDate);
-                  const end = new Date(value);
-                  return end > start || 'End date must be after start date';
-                }
-              })}
-            />
-
-            <Input
-              label="Number of Travelers"
-              type="number"
-              min="1"
-              max="20"
-              icon={<Users size={16} />}
-              error={errors.travelers?.message}
-              {...register('travelers', {
-                required: 'Number of travelers is required',
-                min: { value: 1, message: 'At least 1 traveler required' },
-                max: { value: 20, message: 'Maximum 20 travelers' },
-                valueAsNumber: true
-              })}
-            />
-
-            <Input
-              label="Budget (Optional)"
-              type="number"
-              placeholder="Total budget in USD"
-              helperText="This helps us suggest appropriate activities and accommodations"
-              {...register('budget', { valueAsNumber: true })}
-            />
-          </div>
-
-          {/* Special Interests */}
-          <div>
-            <Input
-              label="Special Interests (Optional)"
-              placeholder="e.g., museums, food tours, nightlife, shopping"
-              helperText="Separate multiple interests with commas"
-              {...register('specialInterests')}
-            />
-          </div>
-
-          {/* Accommodation Preference */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Accommodation Preference (Optional)
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {['Hotel', 'Hostel', 'Airbnb', 'Resort'].map((type) => (
-                <label key={type} className="flex items-center">
-                  <input
-                    type="radio"
-                    value={type.toLowerCase()}
-                    className="mr-2 text-primary-600 focus:ring-primary-500"
-                    {...register('accommodation')}
-                  />
-                  <span className="text-sm text-gray-700">{type}</span>
-                </label>
+        {/* Right Panel - Itinerary */}
+        <div className="w-2/5">
+          {/* Tab Navigation */}
+          <div className="flex items-center justify-start mb-6" style={{ marginTop: '30px', marginLeft: '50px', marginBottom: '10px' }}>
+            <div className="flex space-x-4">
+              {tabs.map((t, i) => (
+                <button
+                  key={t}
+                  className={`tab-pill ${i === activeTab ? 'tab-pill-active' : ''} play-regular`}
+                  onClick={() => setActiveTab(i)}
+                >
+                  {t}
+                </button>
               ))}
             </div>
           </div>
 
-          {/* Constraints */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Special Requirements or Constraints
-              </label>
-            </div>
-
-            {/* Add Constraint Form */}
-            <div className="bg-gray-50 rounded-lg p-4 mb-4">
-              <ConstraintForm onAdd={addConstraint} types={constraintTypes} />
-            </div>
-
-            {/* Current Constraints */}
-            {constraints.length > 0 && (
-              <div className="space-y-2">
-                {constraints.map((constraint, index) => (
-                  <div key={index} className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-3">
-                    <div>
-                      <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                        {constraintTypes.find(t => t.value === constraint.type)?.label}
-                      </span>
-                      <p className="text-sm text-gray-900">{constraint.description}</p>
+          {/* Itinerary List */}
+          <div className="glass-card p-4" style={{ height: '78vh', overflowY: 'auto', marginLeft: '40px' }}>
+            <div className="flex flex-col justify-between h-full space-y-6">
+              {days[activeTab].map((activity) => (
+                <div key={activity.id}>
+                  <div className="glass-card justify-between items-center overflow-hidden p-5" style={{ cursor: 'pointer', marginTop: '10px'}} onClick={() => toggleActions(activity.id)}>
+                    <div className="flex-l gap-4 items-start">
+                      <div className="play-regular min-w-[170px]" style={{ marginLeft: '15px', fontSize: '0.9rem' }}>{activity.time}</div>
+                      <div className="flex-1">
+                        <div className="text-white play-regular" style={{ marginLeft: '15px', fontSize: '1.6rem' }}>{activity.title}</div>
+                        {activity.subtitle && (
+                          <div className="text-white/80 text-sm mt-1" style={{ marginLeft: '15px' }}>{activity.subtitle}</div>
+                        )}
+                        {activity.description && (
+                          <div className="text-white/80 text-sm mt-3" style={{ marginLeft: '15px' }}>{activity.description}</div>
+                        )}
+                      </div>
+                      {activity.image && (
+                        <img src={activity.image} alt="activity" className="w-28 h-24 rounded-lg object-cover" />
+                      )}
                     </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeConstraint(index)}
-                      icon={<X size={16} />}
-                      className="text-gray-400 hover:text-red-500"
-                    >
-                      Remove
-                    </Button>
+
+                    {/* Sliding action panel that pushes content below */}
+                    <div className={`trip-action-panel ${openActionIds.has(activity.id) ? 'open' : ''}`}>
+                      <div className="panel-inner">
+                        <span
+                          className="action-text"
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleRemove(activity.id); } }}
+                          onClick={(e) => { e.stopPropagation(); handleRemove(activity.id); }}
+                        >
+                          Remove?
+                        </span>
+                        <span
+                          className="action-text"
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSuggest(activity.id); } }}
+                          onClick={(e) => { e.stopPropagation(); handleSuggest(activity.id); }}
+                        >
+                          Suggest you an alternative?
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Error Message */}
-          {errors.root && (
-            <div className="bg-red-50 border border-red-200 rounded-md p-3">
-              <p className="text-sm text-red-600">
-                {errors.root.message}
-              </p>
+                </div>
+              ))}
             </div>
-          )}
-
-          {/* Submit Button */}
-          <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => navigate('/dashboard')}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              loading={isSubmitting}
-              size="lg"
-              className="px-8"
-            >
-              Create Itinerary
-            </Button>
           </div>
-        </form>
+        </div>
       </div>
-    </div>
-  );
-};
-
-// Constraint Form Component
-interface ConstraintFormProps {
-  onAdd: (type: TripConstraint['type'], description: string) => void;
-  types: { value: string; label: string }[];
-}
-
-const ConstraintForm: React.FC<ConstraintFormProps> = ({ onAdd, types }) => {
-  const [selectedType, setSelectedType] = useState<TripConstraint['type']>('other');
-  const [description, setDescription] = useState('');
-
-  const handleAdd = () => {
-    if (description.trim()) {
-      onAdd(selectedType, description);
-      setDescription('');
-    }
-  };
-
-  return (
-    <div className="flex items-end space-x-3">
-      <div className="flex-1">
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Type
-        </label>
-        <select
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.target.value as TripConstraint['type'])}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-primary-500 focus:border-primary-500"
-        >
-          {types.map((type) => (
-            <option key={type.value} value={type.value}>
-              {type.label}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="flex-[2]">
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Description
-        </label>
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe your requirement..."
-          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-primary-500 focus:border-primary-500"
-          onKeyPress={(e) => e.key === 'Enter' && handleAdd()}
-        />
-      </div>
-      <Button
-        type="button"
-        onClick={handleAdd}
-        disabled={!description.trim()}
-        icon={<Plus size={16} />}
-        size="sm"
-      >
-        Add
-      </Button>
     </div>
   );
 };

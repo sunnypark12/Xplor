@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   PlusCircle, 
@@ -19,6 +19,7 @@ interface SidebarItem {
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navigationItems: SidebarItem[] = [
     {
@@ -27,19 +28,14 @@ const Sidebar: React.FC = () => {
       label: 'Dashboard'
     },
     {
-      to: '/plan-trip',
-      icon: <PlusCircle size={20} />,
-      label: 'Plan New Trip'
-    },
-    {
       to: '/itinerary/current',
       icon: <Calendar size={20} />,
       label: 'Current Trip'
     },
     {
-      to: '/profile',
-      icon: <User size={20} />,
-      label: 'Profile'
+      to: '/planned-trip',
+      icon: <MapPin size={20} />,
+      label: 'Planned Trip'
     }
   ];
 
@@ -65,32 +61,34 @@ const Sidebar: React.FC = () => {
     const isActive = isActiveRoute(item.to);
     
     return (
-      <Link
-        to={item.to}
+      <button
+        onClick={() => navigate(item.to)}
         className={`
-          flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200
+          flex items-center glass-sidebar-item transition-all duration-200 border-none w-full mx-auto
           ${isActive 
-            ? 'glass-strong text-primary-700 border-r-2 border-primary-400' 
-            : 'text-glass hover:glass-card'
+            ? 'active text-glass-strong' 
+            : 'text-glass hover:text-glass-strong'
           }
         `}
       >
         <span className={`mr-3 ${isActive ? 'text-primary-600' : 'text-glass opacity-70'}`}>
           {item.icon}
         </span>
-        <span className="flex-1 text-sm font-medium">{item.label}</span>
+        <span className="flex-1 text-sm font-medium ml-2">
+          {item.label}
+        </span>
         {item.badge && (
           <span className="ml-auto glass text-primary-700 text-xs px-2 py-1 rounded-full font-medium">
             {item.badge}
           </span>
         )}
-      </Link>
+      </button>
     );
   };
 
   return (
     <div className="w-64 glass-navbar min-h-screen border-r border-white border-opacity-20">
-      <div className="p-4">
+      <div className="p-4 pt-8">
         {/* Primary Navigation */}
         <nav className="space-y-1">
           {navigationItems.map((item) => (
@@ -108,13 +106,7 @@ const Sidebar: React.FC = () => {
           ))}
         </nav>
 
-        {/* Quick Stats or Info */}
-        <div className="mt-8 p-4 glass-card">
-          <div className="flex items-center text-sm text-glass">
-            <MapPin size={16} className="mr-2 text-primary-500" />
-            <span>Ready for your next adventure?</span>
-          </div>
-        </div>
+        
       </div>
     </div>
   );

@@ -15,6 +15,8 @@ export interface TravelProfile {
   budgetLevel: 'budget' | 'moderate' | 'luxury'; // Budget preference
   pacePreference: 'slow' | 'moderate' | 'fast'; // Travel pace
   groupDynamic: 'solo' | 'couple' | 'family' | 'friends'; // Group type
+  travelerType?: string; // New personality type
+  quizResponses?: QuizResponse[]; // Store quiz responses
   createdAt: Date;
 }
 
@@ -28,11 +30,37 @@ export interface TripInput {
   constraints: TripConstraint[];
   budget?: number;
   accommodation?: string;
+  occasion?: string;
 }
 
 export interface TripConstraint {
   type: 'mobility' | 'dietary' | 'time' | 'other';
   description: string;
+}
+
+// AI Recommendation Types
+export interface BudgetBreakdown {
+  [key: string]: number;
+}
+
+export interface ParsedRecommendations {
+  summary: string;
+  destination_analysis: string;
+  budget_breakdown: BudgetBreakdown;
+  practical_guide: {
+    packing_essentials: string[];
+    cultural_etiquette: string[];
+    language_basics: string[];
+    safety_considerations: string[];
+    local_transportation: string[];
+    emergency_contacts: string[];
+  };
+  personalization_touches: {
+    hidden_gems: string;
+    local_connections: string;
+    seasonal_specials: string;
+    future_trip_seeds: string;
+  };
 }
 
 // Itinerary Types
@@ -44,6 +72,9 @@ export interface Itinerary {
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean;
+  aiResponse?: string; // Raw AI response
+  parsedData?: any; // Legacy parsed AI data
+  parsedRecommendations?: ParsedRecommendations; // New structured recommendations
 }
 
 export interface ItineraryDay {
@@ -126,7 +157,8 @@ export interface QuizQuestion {
   question: string;
   type: 'single' | 'multiple' | 'scale' | 'ranking';
   options: QuizOption[];
-  category: keyof TravelProfile;
+  category: string;
+  backgroundImage?: string;
 }
 
 export interface QuizOption {
@@ -134,6 +166,7 @@ export interface QuizOption {
   text: string;
   value: string | number;
   image?: string;
+  personalities?: string[];
 }
 
 export interface QuizResponse {
@@ -159,6 +192,7 @@ export interface AuthContextType {
   signUp: (email: string, password: string, displayName: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<void>;
+  refreshUserData: () => Promise<void>;
 }
 
 export interface TravelContextType {

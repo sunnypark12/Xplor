@@ -11,14 +11,14 @@ class Settings:
     """Configuration settings for the AI Travel Agent system"""
     
     # OpenAI Configuration
-    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
-    OPENAI_MODEL: str = "gpt-5-mini-2025-08-07"
+    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "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")
+    OPENAI_MODEL: str = "gpt-4o-mini"
     OPENAI_MAX_TOKENS: int = 16384
     OPENAI_TEMPERATURE: float = 0.7
     
     # Firebase Configuration
-    FIREBASE_CREDENTIALS_PATH: str = os.getenv("FIREBASE_CREDENTIALS_PATH", "../config/firebase.ts")
-    FIREBASE_PROJECT_ID: str = os.getenv("FIREBASE_PROJECT_ID", "")
+    FIREBASE_CREDENTIALS_PATH: str = os.getenv("FIREBASE_CREDENTIALS_PATH", "../config/firebase-credentials.ts")
+    FIREBASE_PROJECT_ID: str = os.getenv("FIREBASE_PROJECT_ID", "xplor-8f55e")
     
     # Kaggle Configuration
     KAGGLE_USERNAME: str = os.getenv("KAGGLE_USERNAME", "")

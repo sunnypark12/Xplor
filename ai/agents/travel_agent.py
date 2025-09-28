@@ -57,17 +57,19 @@ class PersonalizedTravelAgent:
         This is the core prompt engineering for personalized recommendations
         """
         return """
-You are an expert AI Travel Agent named "Xplor AI" with access to comprehensive global travel data. Your mission is to create personalized, memorable travel experiences that perfectly match each user's preferences, budget, and travel style.
+You are "Xplor AI", an expert AI Travel Agent with access to comprehensive global travel data and advanced personalization algorithms. Your mission is to create transformative, personalized travel experiences that exceed expectations while respecting individual preferences, constraints, and budgets.
 
 ## YOUR EXPERTISE & DATA ACCESS
 
 You have access to:
-1. **Tourism Spots Database**: Detailed information about scenic spots, attractions, facilities, and visitor data worldwide
-2. **Tourist Destinations Database**: Popular destinations with features, ratings, popularity metrics, and seasonal information  
-3. **Travel History Database**: Historical trip data, travel patterns, and user behavior analytics
-4. **Restaurant Database**: Global restaurant data, reviews, cuisines, and dining experiences
-5. **User Profile Database**: Individual travel preferences, past trips, ratings, and personalized data
-6. **Real-time Data**: Current travel trends, seasonal popularity, and destination conditions
+1. **Tourism Spots Database**: 200,000+ scenic spots, attractions, facilities, and real visitor data worldwide
+2. **Tourist Destinations Database**: Popular destinations with detailed features, ratings, popularity metrics, and seasonal information  
+3. **Travel History Database**: Historical trip data, travel patterns, and user behavior analytics from millions of travelers
+4. **Restaurant Database**: Global restaurant data with 500,000+ reviews, cuisines, and authentic dining experiences
+5. **User Profile Database**: Individual travel preferences, past trips, ratings, and personalized behavioral data
+6. **Real-time Data**: Current travel trends, seasonal popularity, weather patterns, and destination conditions
+7. **Cultural Intelligence**: Local customs, etiquette, language basics, and cultural sensitivity guidelines
+8. **Safety & Health Data**: Current safety conditions, health requirements, and travel advisories
 
 ## CORE PRINCIPLES
 
@@ -120,36 +122,58 @@ You have access to:
 Always structure your responses as follows:
 
 ### 🎯 PERSONALIZED RECOMMENDATION SUMMARY
-- Brief overview tailored to user's request
-- Key highlights that match their preferences
+- Brief overview tailored to user's request and profile
+- Key highlights that match their specific preferences
+- Unique value proposition for this trip
 
 ### 🗺️ DESTINATION ANALYSIS
-- Why this destination fits their profile
-- Best travel timing and duration
-- Key attractions and experiences
+- Why this destination perfectly fits their profile
+- Optimal travel timing based on weather, crowds, and prices
+- Duration recommendations with flexibility options
+- Key attractions categorized by their interests
 
 ### 📅 DETAILED ITINERARY
-- Day-by-day breakdown with timing
-- Mix of must-see and unique experiences
-- Restaurant recommendations for each meal
-- Transportation between locations
+**Format each day as:**
+**Day X - [Date] - [Theme/Focus]**
+- **Morning (9:00-12:00)**: [Activity] at [Location]
+  - Duration: [X hours]
+  - Why it fits your profile: [Reason]
+  - Pro tip: [Local insight]
+- **Lunch (12:00-13:30)**: [Restaurant] - [Cuisine type]
+  - Budget: [Price range]
+  - Specialty: [Recommended dish]
+- **Afternoon (14:00-17:00)**: [Activity] at [Location]
+  - Duration: [X hours]
+  - Transportation: [Method, time, cost]
+- **Evening (18:00-21:00)**: [Activity/Dinner]
+  - Experience type: [Cultural/Adventure/Relaxation]
+  - Local connection: [Cultural significance]
 
-### 💰 BUDGET BREAKDOWN
-- Detailed cost estimates by category
-- Money-saving tips and alternatives
-- Best booking strategies
+### 💰 DETAILED BUDGET BREAKDOWN
+- **Accommodation**: $X per night × Y nights = $Z
+- **Transportation**: Local $X + International $Y = $Z
+- **Food**: $X per day × Y days = $Z
+- **Activities**: Detailed breakdown by attraction/activity
+  - [Activity 1]: $X
+  - [Activity 2]: $X
+  - [Additional activities]: $X
+- **Miscellaneous**: Shopping, tips, emergencies = $Z
+- **Total Estimated**: $X (with 10% buffer)
+- **Money-saving alternatives**: [Specific suggestions]
 
 ### 🎒 PRACTICAL GUIDE
-- Packing recommendations
-- Cultural tips and etiquette
-- Safety considerations
-- Local transportation options
+- **Packing essentials**: Based on weather and activities
+- **Cultural etiquette**: Do's and don'ts specific to destination
+- **Language basics**: Essential phrases with pronunciation
+- **Safety considerations**: Current conditions and precautions
+- **Local transportation**: Apps, cards, and navigation tips
+- **Emergency contacts**: Local services and embassy information
 
 ### 🌟 PERSONALIZATION TOUCHES
-- Special experiences based on their interests
-- Hidden gems discovered through data analysis
-- Connections to their travel history
-- Recommendations for future trips
+- **Hidden gems**: Off-the-beaten-path experiences matching your interests
+- **Local connections**: Authentic experiences with cultural significance
+- **Seasonal specials**: Unique opportunities during your travel dates
+- **Future trip seeds**: Related destinations for your next adventure
 
 ## CONVERSATION STYLE
 
@@ -325,11 +349,14 @@ Please provide a comprehensive, personalized travel recommendation following the
             
             recommendation = response.choices[0].message.content
             
-            # Structure the response
+            # Parse and structure the response
+            parsed_recommendations = self._parse_recommendation_response(recommendation)
+            
             result = {
                 "user_id": user_id,
                 "query": query,
                 "recommendation": recommendation,
+                "parsed_recommendations": parsed_recommendations,
                 "timestamp": datetime.now().isoformat(),
                 "model_used": settings.OPENAI_MODEL,
                 "data_sources_used": list(self.datasets.keys()),
@@ -366,6 +393,154 @@ Please provide a comprehensive, personalized travel recommendation following the
                 context += "\n"
         
         return context
+    
+    def _parse_recommendation_response(self, recommendation_text: str) -> Dict[str, Any]:
+        """
+        Parse the OpenAI recommendation response into structured data
+        """
+        try:
+            parsed_data = {
+                "summary": "",
+                "destination_analysis": "",
+                "budget_breakdown": {},
+                "practical_guide": {
+                    "packing_essentials": [],
+                    "cultural_etiquette": [],
+                    "language_basics": [],
+                    "safety_considerations": [],
+                    "local_transportation": [],
+                    "emergency_contacts": []
+                },
+                "personalization_touches": {
+                    "hidden_gems": "",
+                    "local_connections": "",
+                    "seasonal_specials": "",
+                    "future_trip_seeds": ""
+                }
+            }
+            
+            # Extract summary section
+            summary_match = self._extract_section(recommendation_text, r"🎯\s*PERSONALIZED RECOMMENDATION SUMMARY", r"🗺️|###")
+            if summary_match:
+                parsed_data["summary"] = summary_match.strip()
+            
+            # Extract destination analysis
+            dest_match = self._extract_section(recommendation_text, r"🗺️\s*DESTINATION ANALYSIS", r"📅|###")
+            if dest_match:
+                parsed_data["destination_analysis"] = dest_match.strip()
+            
+            # Extract budget breakdown
+            budget_match = self._extract_section(recommendation_text, r"💰\s*(?:DETAILED\s+)?BUDGET BREAKDOWN", r"🎒|###")
+            if budget_match:
+                parsed_data["budget_breakdown"] = self._parse_budget_section(budget_match)
+            
+            # Extract practical guide sections
+            practical_match = self._extract_section(recommendation_text, r"🎒\s*PRACTICAL GUIDE", r"🌟|###")
+            if practical_match:
+                parsed_data["practical_guide"] = self._parse_practical_guide(practical_match)
+            
+            # Extract personalization touches
+            personal_match = self._extract_section(recommendation_text, r"🌟\s*PERSONALIZATION TOUCHES", r"###|$")
+            if personal_match:
+                parsed_data["personalization_touches"] = self._parse_personalization_touches(personal_match)
+            
+            return parsed_data
+            
+        except Exception as e:
+            logger.error(f"Error parsing recommendation response: {e}")
+            return {}
+    
+    def _extract_section(self, text: str, start_pattern: str, end_pattern: str) -> str:
+        """Extract a section from text using regex patterns"""
+        import re
+        start_match = re.search(start_pattern, text, re.IGNORECASE | re.MULTILINE)
+        if not start_match:
+            return ""
+        
+        start_pos = start_match.end()
+        end_match = re.search(end_pattern, text[start_pos:], re.IGNORECASE | re.MULTILINE)
+        
+        if end_match:
+            return text[start_pos:start_pos + end_match.start()]
+        else:
+            return text[start_pos:]
+    
+    def _parse_budget_section(self, budget_text: str) -> Dict[str, Any]:
+        """Parse budget breakdown from text"""
+        import re
+        budget_data = {}
+        
+        # Extract individual budget items
+        patterns = [
+            (r"Accommodation[:\-]\s*\$?(\d+)", "accommodation"),
+            (r"Food[:\-]\s*\$?(\d+)", "food"),
+            (r"Transportation[:\-].*?\$?(\d+)", "transportation"),
+            (r"Activities[:\-].*?\$?(\d+)", "activities"),
+            (r"Total.*?[:\-]\s*\$?(\d+)", "total_estimated")
+        ]
+        
+        for pattern, key in patterns:
+            match = re.search(pattern, budget_text, re.IGNORECASE)
+            if match:
+                budget_data[key] = int(match.group(1))
+        
+        # Extract specific activity costs
+        activity_matches = re.findall(r"-\s*([^:]+):\s*\$?(\d+)", budget_text)
+        for activity, cost in activity_matches:
+            clean_activity = activity.strip().lower().replace(" ", "_")
+            budget_data[clean_activity] = int(cost)
+        
+        return budget_data
+    
+    def _parse_practical_guide(self, practical_text: str) -> Dict[str, List[str]]:
+        """Parse practical guide section"""
+        import re
+        guide_data = {
+            "packing_essentials": [],
+            "cultural_etiquette": [],
+            "language_basics": [],
+            "safety_considerations": [],
+            "local_transportation": [],
+            "emergency_contacts": []
+        }
+        
+        sections = {
+            "packing_essentials": r"Packing essentials?[:\-](.*?)(?=Cultural|Language|Safety|Local|Emergency|$)",
+            "cultural_etiquette": r"Cultural etiquette[:\-](.*?)(?=Packing|Language|Safety|Local|Emergency|$)",
+            "language_basics": r"Language basics?[:\-](.*?)(?=Packing|Cultural|Safety|Local|Emergency|$)",
+            "safety_considerations": r"Safety considerations?[:\-](.*?)(?=Packing|Cultural|Language|Local|Emergency|$)",
+            "local_transportation": r"Local transportation[:\-](.*?)(?=Packing|Cultural|Language|Safety|Emergency|$)",
+            "emergency_contacts": r"Emergency contacts?[:\-](.*?)(?=Packing|Cultural|Language|Safety|Local|$)"
+        }
+        
+        for key, pattern in sections.items():
+            match = re.search(pattern, practical_text, re.IGNORECASE | re.DOTALL)
+            if match:
+                section_text = match.group(1)
+                # Extract bullet points
+                items = re.findall(r"[-•]\s*(.+)", section_text)
+                guide_data[key] = [item.strip() for item in items]
+        
+        return guide_data
+    
+    def _parse_personalization_touches(self, personal_text: str) -> Dict[str, str]:
+        """Parse personalization touches section"""
+        import re
+        personal_data = {}
+        
+        sections = {
+            "hidden_gems": r"Hidden gems?[:\-](.*?)(?=Local|Seasonal|Future|$)",
+            "local_connections": r"Local connections?[:\-](.*?)(?=Hidden|Seasonal|Future|$)",
+            "seasonal_specials": r"Seasonal specials?[:\-](.*?)(?=Hidden|Local|Future|$)",
+            "future_trip_seeds": r"Future trip seeds?[:\-](.*?)(?=Hidden|Local|Seasonal|$)"
+        }
+        
+        for key, pattern in sections.items():
+            match = re.search(pattern, personal_text, re.IGNORECASE | re.DOTALL)
+            if match:
+                personal_data[key] = match.group(1).strip()
+        
+        return personal_data
     
     async def get_destination_recommendations(self, 
                                             preferences: Dict[str, Any],

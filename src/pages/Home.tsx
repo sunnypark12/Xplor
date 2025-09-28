@@ -1,35 +1,129 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, MapPin, Search } from 'lucide-react';
+import { Plus, MapPin, Search, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import GlobeComponent from '../components/3D/Globe';
+import { useTravel } from '../contexts/TravelContext';
+import { useAuth } from '../contexts/AuthContext';
+import toast from 'react-hot-toast';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../calendar.css';
-import GlobeComponent from '../components/3D/Globe';
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
+  const { createItinerary } = useTravel();
+  const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const [tripData, setTripData] = useState({
     destination: '',
     groupSize: 'Family',
     occasion: 'Anniversary',
-    selectedDates: new Date(),
+    startDate: null as Date | null,
+    endDate: null as Date | null,
     budget: '',
   });
 
   const groupSizeOptions = ['Solo', 'Couple', 'Family', 'Friends', 'Group'];
   const occasionOptions = ['Anniversary', 'Birthday', 'Honeymoon', 'Business', 'Vacation', 'Adventure'];
-  const handleStartPlanning = (e: React.FormEvent) => {
+  const handleStartPlanning = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Starting trip planning with data:', tripData);
+    
+    // Validation
+    if (!tripData.destination.trim()) {
+      toast.error('Please enter a destination');
+      return;
+    }
+    
+    if (!tripData.startDate || !tripData.endDate) {
+      toast.error('Please select start and end dates');
+      return;
+    }
+    
+    // Temporarily bypass auth check for testing
+    if (!user) {
+      console.warn('No user logged in, but proceeding for testing');
+      // toast.error('Please log in to create an itinerary');
+      // navigate('/');
+      // return;
+    }
+    
+    try {
+      setIsSubmitting(true);
+      
+      // Create trip input from form data
+      const tripInput = {
+        destination: tripData.destination.trim(),
+        startDate: tripData.startDate,
+        endDate: tripData.endDate,
+        travelers: getTravelerCount(tripData.groupSize),
+        specialInterests: [tripData.occasion.toLowerCase()],
+        constraints: [],
+        budget: tripData.budget ? parseInt(tripData.budget) : undefined,
+        userId: user?.id || 'test-user' // Fallback for testing
+      };
+      
+      // Create itinerary using the travel context
+      await createItinerary(tripInput);
+      
+      // Navigate to planned trip page
+      navigate('/planned-trip');
+      
+    } catch (error: any) {
+      console.error('Error creating itinerary:', error);
+      toast.error(error.message || 'Failed to create itinerary. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  const getTravelerCount = (groupSize: string): number => {
+    switch (groupSize) {
+      case 'Solo': return 1;
+      case 'Couple': return 2;
+      case 'Family': return 4;
+      case 'Friends': return 3;
+      case 'Group': return 6;
+      default: return 2;
+    }
+  };
+
+  const handleDateClick = (date: Date) => {
+    if (!tripData.startDate) {
+      // First click - set start date
+      setTripData(prev => ({ ...prev, startDate: date }));
+    } else if (!tripData.endDate) {
+      // Second click - set end date
+      if (date < tripData.startDate) {
+        // If clicked date is before start date, swap them
+        setTripData(prev => ({ 
+          ...prev, 
+          startDate: date, 
+          endDate: prev.startDate 
+        }));
+      } else {
+        // Normal case - set end date
+        setTripData(prev => ({ ...prev, endDate: date }));
+      }
+    } else {
+      // Third click - reset and start new selection
+      setTripData(prev => ({ 
+        ...prev, 
+        startDate: date, 
+        endDate: null 
+      }));
+    }
   };
 
   return (
-    <div className="relative w-40% h-screen overflow-hidden home-background" style={{ overflow: 'hidden' }}>
+    <div className="relative w-full h-screen overflow-hidden home-background" style={{ overflow: 'hidden' }}>
       {/* 3D Globe - Full Screen */}
       <GlobeComponent />
 
       {/* Trip Planning Glass Card - Positioned on the right side */}
       <motion.div
-        className="items-end justify-end transform -translate-y-1/2 z-20 w-96"
+        className="absolute right-0 top-0 z-20"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 0.8 }}
@@ -41,7 +135,21 @@ const Home: React.FC = () => {
             overflow: 'hidden'
           }}
       >
-         <div className="glass-card-main p-8 shadow-2xl flex items-center justify-center" style={{height: "100vh", overflow: 'hidden'}}> {/* Increased padding */}
+         <div className="glass-card-main p-8 shadow-2xl flex items-center justify-center relative" style={{height: "100vh", overflow: 'hidden'}}> {/* Added relative positioning */}
+           {/* Close button */}
+           <button 
+             onClick={() => navigate('/dashboard')}
+             className="absolute top-4 right-4 p-2 glass-card-floating rounded-full hover:bg-white/10 transition-colors"
+             style={{
+               position: 'absolute',
+               right: '1.5rem',
+               top: '1.5rem',
+               zIndex: 30
+             }}
+           >
+             <X className="w-5 h-5 text-white" />
+           </button>
+           
            <div className="text-white w-full max-w-md mx-auto">
              {/* Header */}
              <div className="flex items-start justify-start gap-2 mb-8"> {/* Increased margin bottom */}
@@ -92,11 +200,31 @@ const Home: React.FC = () => {
                         fontSize: "1rem", 
                     }}>
                    <Calendar
-                     onChange={(date) => setTripData(prev => ({ ...prev, selectedDates: date as Date }))}
-                     value={tripData.selectedDates}
+                     onClickDay={handleDateClick}
+                     value={tripData.startDate && tripData.endDate ? [tripData.startDate, tripData.endDate] : tripData.startDate}
+                     selectRange={true}
                      className="react-calendar items-center" 
                      tileClassName="text-white"
                    />
+                   {/* Date Selection Status */}
+                   <div className="mt-3 text-center">
+                     {tripData.startDate && (
+                       <p className="text-white/80 text-sm">
+                         Start: {tripData.startDate.toLocaleDateString()}
+                       </p>
+                     )}
+                     {tripData.endDate && (
+                       <p className="text-white/80 text-sm">
+                         End: {tripData.endDate.toLocaleDateString()}
+                       </p>
+                     )}
+                     {!tripData.startDate && (
+                       <p className="text-white/60 text-sm">Click to select start date</p>
+                     )}
+                     {tripData.startDate && !tripData.endDate && (
+                       <p className="text-white/60 text-sm">Click to select end date</p>
+                     )}
+                   </div>
                  </div>
                </div>
 
@@ -110,7 +238,7 @@ const Home: React.FC = () => {
                      </label>
                    </div>
                    <select
-                     className="w-full h-12 px-6 glass-card-group text-white focus:outline-none focus:ring-2 rounded-lg text-base"
+                     className="w-full h-10 px-6 glass-card-group text-white focus:outline-none focus:ring-2 rounded-lg text-base"
                      value={tripData.groupSize}
                      onChange={(e) => setTripData(prev => ({ ...prev, groupSize: e.target.value }))}
                    >
@@ -130,7 +258,7 @@ const Home: React.FC = () => {
                      </label>
                    </div>
                    <select
-                     className="w-full h-12 px-6 glass-card-occasion text-white focus:outline-none focus:ring-2 rounded-lg text-base"
+                     className="w-full h-10 px-6 glass-card-occasion text-white focus:outline-none focus:ring-2 rounded-lg text-base"
                      value={tripData.occasion}
                      onChange={(e) => setTripData(prev => ({ ...prev, occasion: e.target.value }))}
                    >
@@ -144,7 +272,7 @@ const Home: React.FC = () => {
                </div>
 
                {/* Budget */}
-               <div className="text-left mb-18 pb-4"> {/* Increased margin bottom for more space */}
+               <div className="text-left mb-10"> {/* Removed pb-4 */}
                  <label className="play-regular text-white font-medium mb-4 block text-base" style={{color: "#FFFFFF"}}>Budget</label>
                  <div className="relative">
                  <div className="glass-card-input flex items-center px-3" style={{height: "45px", paddingLeft: "20px"}}>
@@ -173,10 +301,11 @@ const Home: React.FC = () => {
                <div className="space-y-5 text-center mt-10"> {/* Increased margin top and space between buttons */}
                  <button
                    type="submit"
-                   className="w-full glass-card-button-primary text-white py-3 px-6 rounded-lg font-semibold transition-colors text-sm"
+                   disabled={isSubmitting}
+                   className="w-full glass-card-button-primary text-white py-3 px-6 rounded-lg font-semibold transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                    style={{height: "45px", width: "100%", color: "#FFFFFF"}}
                  >
-                   Generate my plan
+                   {isSubmitting ? 'Creating your plan...' : 'Generate my plan'}
                  </button>
                    <button
                      type="button"
@@ -185,7 +314,8 @@ const Home: React.FC = () => {
                        destination: '',
                        groupSize: 'Family',
                        occasion: 'Anniversary', 
-                       selectedDates: new Date(),
+                       startDate: null,
+                       endDate: null,
                        budget: '',
                      })}
                    >

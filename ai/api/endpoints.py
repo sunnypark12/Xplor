@@ -26,10 +26,11 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],  # Add your frontend URLs
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=["*"],  # Allow all origins for development
+    allow_credentials=False,  # Set to False when using allow_origins=["*"]
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Initialize AI components
@@ -55,7 +56,7 @@ class RecommendationRequest(BaseModel):
 class ItineraryRequest(BaseModel):
     destination: str
     duration: int
-    budget: int
+    budget: Optional[int] = 2000
     user_id: str
     preferences: Optional[Dict[str, Any]] = {}
 
@@ -166,19 +167,25 @@ async def get_recommendations(request: RecommendationRequest):
             timestamp=datetime.now().isoformat()
         )
 
+@app.options("/api/itinerary/create")
+async def create_itinerary_options():
+    """Handle CORS preflight for itinerary creation"""
+    return {"message": "OK"}
+
 @app.post("/api/itinerary/create", response_model=TravelResponse)
 async def create_itinerary(request: ItineraryRequest):
     """
     Create a detailed travel itinerary for a specific destination
     """
     try:
-        logger.info(f"Creating itinerary for {request.destination}, {request.duration} days")
+        logger.info(f"Creating itinerary for {request.destination}, {request.duration} days, budget: {request.budget}")
+        logger.info(f"Request data: {request.dict()}")
         
         itinerary = await travel_agent.create_detailed_itinerary(
             destination=request.destination,
             duration=request.duration,
             preferences=request.preferences,
-            budget=request.budget
+            budget=request.budget or 2000
         )
         
         if "error" in itinerary:

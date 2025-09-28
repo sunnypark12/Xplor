@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import signupBg from "../Signup.png";
+import toast from "react-hot-toast";
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const { signUp } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,12 +23,33 @@ const SignUp: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
-    // Redirect to home page after successful signup
-    navigate("/test-home");
+    
+    // Validation
+    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim() || !formData.password.trim()) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    
+    if (formData.password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const displayName = `${formData.firstName.trim()} ${formData.lastName.trim()}`;
+      await signUp(formData.email, formData.password, displayName);
+      
+      // Navigate to quiz page after successful signup
+      navigate("/quiz");
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      // Error toast is already handled in the auth context
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -78,7 +103,7 @@ const SignUp: React.FC = () => {
             <p className="play-regular" style={{ fontSize: "1rem", color: "#f1f1f1" }}>
               Already a member?
               <Link 
-                to="/home-test" 
+                to="/" 
                 className="text-orange-300 play-regular"  style={{ fontSize: "1rem", color: "#f1f1f1", marginLeft: "7px" }}
               >
             Log in
@@ -184,15 +209,18 @@ const SignUp: React.FC = () => {
             {/* Create Account button */}
             <button
               type="submit"
-              className="glass-card play-regular text-white focus:outline-none transition-all w-full"
+              disabled={isLoading}
+              className="glass-card play-regular text-white focus:outline-none transition-all w-full disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ 
                 height: "50px", 
                 fontSize: "1rem", 
                 padding: "0.75rem",
-                marginTop: "40px"
+                marginTop: "40px",
+                border: "none",
+                cursor: isLoading ? "not-allowed" : "pointer"
               }}
             >
-              Create Account
+              {isLoading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
         </div>

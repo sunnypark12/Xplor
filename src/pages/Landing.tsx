@@ -1,8 +1,46 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import Button from "../components/common/Button";
+import toast from "react-hot-toast";
 
 const Landing: React.FC = () => {
+  const navigate = useNavigate();
+  const { signIn } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.email.trim() || !formData.password.trim()) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await signIn(formData.email, formData.password);
+      // Navigation will be handled by the PublicRoute in App.tsx
+    } catch (error: any) {
+      console.error('Login error:', error);
+      // Error toast is already handled in the auth context
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col">
       {/* Background image */}
@@ -78,55 +116,67 @@ const Landing: React.FC = () => {
               LOGIN
             </h3>
 
-            {/* Input fields container */}
-            <div className="flex flex-col items-center gap-40">
-              {/* Email */}
-              <input
-                type="email"
-                placeholder="Email"
-                className="glass-card play-regular text-white placeholder-white/70 focus:outline-none transition-all"
-                style={{ 
-                  width: "50%", 
-                  height: "10%", 
-                  fontSize: "1rem", 
-                  padding: "0.75rem",
-                  marginTop: "15px",
-                }}
-              />
-          
-              {/* Password */}
-              <input
-                type="password"
-                placeholder="Password"
-                className="glass-card play-regular text-white placeholder-white/70 focus:outline-none transition-all"
-                style={{ 
-                  width: "50%", 
-                  marginTop: "20px",
-                  height: "10%", 
-                  fontSize: "1rem", 
-                  padding: "0.75rem"
-                }}
-              />
-            </div>
+            {/* Login Form */}
+            <form onSubmit={handleSubmit}>
+              {/* Input fields container */}
+              <div className="flex flex-col items-center gap-40">
+                {/* Email */}
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="glass-card play-regular text-white placeholder-white/70 focus:outline-none transition-all"
+                  style={{ 
+                    width: "50%", 
+                    height: "10%", 
+                    fontSize: "1rem", 
+                    padding: "0.75rem",
+                    marginTop: "15px",
+                  }}
+                  required
+                />
+            
+                {/* Password */}
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="glass-card play-regular text-white placeholder-white/70 focus:outline-none transition-all"
+                  style={{ 
+                    width: "50%", 
+                    marginTop: "20px",
+                    height: "10%", 
+                    fontSize: "1rem", 
+                    padding: "0.75rem"
+                  }}
+                  required
+                />
+              </div>
 
-            {/* Login Button */}
-            <div className="flex justify-center mt-6">
-              <Link
-                to="/test-home"
-                className="glass-card play-regular hover:bg-white/20 transition-all px-8 py-3 rounded-lg flex items-center justify-center"
-                style={{ 
-                  fontSize: ".9rem",
-                  marginTop: '20px',
-                  color: "black",
-                  width: "18%", 
-                  height: "5%", 
-                  textDecoration: "none",
-                  display: "flex"
-                }}
-              >
-                Submit
-              </Link>
-            </div>
+              {/* Login Button */}
+              <div className="flex justify-center mt-6">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="glass-card play-regular hover:bg-white/20 transition-all px-8 py-3 rounded-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ 
+                    fontSize: ".9rem",
+                    marginTop: '20px',
+                    color: "black",
+                    width: "18%", 
+                    height: "5%", 
+                    border: "none",
+                    cursor: "pointer"
+                  }}
+                >
+                  {isLoading ? "Signing in..." : "Submit"}
+                </button>
+              </div>
+            </form>
           
 
 
