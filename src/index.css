@@ -35,6 +35,176 @@ code {
     monospace;
 }
 
+/* Glass Card Styles for Trip Popups */
+.trip-popup-glass {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 420px;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(20.1px);
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  font-family: 'Play', sans-serif;
+}
+
+.trip-popup-image {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 25px 25px 0 0;
+  overflow: hidden;
+}
+
+.trip-popup-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(27, 90, 103, 0) 0%, rgba(27, 90, 103, 0.8) 100%);
+}
+
+.trip-popup-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trip-popup-heart {
+  position: absolute;
+  top: 12px;
+  right: 55px;
+  color: #F1F1F1;
+  font-size: 24px;
+  z-index: 1001;
+}
+
+.trip-popup-location {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: #F1F1F1;
+}
+
+.trip-popup-location h2 {
+  margin: 0 0 5px 0;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 28px;
+  color: #F1F1F1;
+}
+
+.trip-popup-traveler-type {
+  margin: 0;
+  font-size: 12px;
+  line-height: 14px;
+  color: #F1F1F1;
+  opacity: 0.9;
+}
+
+.trip-popup-details {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: linear-gradient(135deg, #4A90A4 0%, #357A8A 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-radius: 0 0 25px 25px;
+}
+
+.trip-popup-duration {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.trip-popup-duration-label {
+  font-size: 12px;
+  line-height: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+
+.trip-popup-duration-value {
+  font-size: 48px;
+  line-height: 48px;
+  font-weight: 400;
+  color: #FFFFFF;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.trip-popup-duration-days {
+  font-size: 14px;
+  line-height: 16px;
+  color: #FFFFFF;
+  font-weight: 400;
+}
+
+.trip-popup-occasion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.trip-popup-occasion-label {
+  font-size: 12px;
+  line-height: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 5px;
+  font-weight: 400;
+}
+
+.trip-popup-occasion-value {
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+
+.trip-popup-divider {
+  display: none;
+}
+
+/* Home page specific background */
+.home-background {
+  background-image: url('./sky.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  height: 100vh; /* Fixed height to match glass card */
+  max-height: 100vh; /* Prevent overflow */
+  background-color: rgba(0, 0, 0, 0.3); /* Add dark overlay */
+  background-blend-mode: multiply; /* Blend with background image */
+}
+
 .play-regular {
   font-family: "Play", sans-serif;
   font-weight: 400;
@@ -668,4 +838,266 @@ select:focus-visible {
 body:has(.signup-page) {
   background-image: none !important;
   background-color: transparent !important;
+}
+
+/* Unique Glass Card Designs */
+
+/* Main background card - Deep glass with strong blur */
+.glass-card-main {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20.1px);
+  -webkit-backdrop-filter: blur(20.1px);
+  border-radius: 100px 0 0 100px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Destination input - Frosted glass with blue tint */
+.glass-card-input {
+  background: rgba(27, 90, 103, 0.25);
+  backdrop-filter: blur(21.9px);
+  -webkit-backdrop-filter: blur(21.9px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 8px 24px rgba(27, 90, 103, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.glass-card-input:focus {
+  background: rgba(27, 90, 103, 0.35);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 12px 32px rgba(27, 90, 103, 0.25),
+    0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* Remove text selection highlighting for glass card inputs */
+.glass-card-input input {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+}
+
+.glass-card-input input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+}
+
+.glass-card-input input::selection {
+  background: transparent;
+}
+
+.glass-card-input input::-moz-selection {
+  background: transparent;
+}
+
+/* Remove all focus borders and outlines from glass card inputs */
+.glass-card-input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.glass-card-input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Calendar container - Warm glass with amber tint */
+.glass-card-calendar {
+  background: rgba(27, 90, 103, 0.25);
+  backdrop-filter: blur(21.9px);
+  -webkit-backdrop-filter: blur(21.9px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 10px 30px rgba(27, 90, 103, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Group size select - Purple tint glass */
+.glass-card-group {
+  background: rgba(147, 51, 234, 0.15);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 16px;
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  box-shadow: 
+    0 8px 25px rgba(147, 51, 234, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: all 0.3s ease;
+  min-height: 64px;
+}
+
+.glass-card-group:hover {
+  background: rgba(147, 51, 234, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 35px rgba(147, 51, 234, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Occasion select - Pink tint glass */
+.glass-card-occasion {
+  background: rgba(236, 72, 153, 0.15);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 16px;
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  box-shadow: 
+    0 8px 25px rgba(236, 72, 153, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: all 0.3s ease;
+  min-height: 64px;
+}
+
+.glass-card-occasion:hover {
+  background: rgba(236, 72, 153, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 35px rgba(236, 72, 153, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Generate button - Emerald gradient glass */
+.glass-card-button-primary {
+  background: rgba(27, 90, 103, 0.55);
+  backdrop-filter: blur(21.9px);
+  -webkit-backdrop-filter: blur(21.9px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.27);
+  box-shadow: 
+    0 8px 25px rgba(27, 90, 103, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.glass-card-button-primary:hover {
+  background: rgba(27, 90, 103, 0.65);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 35px rgba(27, 90, 103, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* Reset button - Subtle gray glass */
+.glass-card-button-secondary {
+  background: rgba(107, 114, 128, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 8px;
+  border: 1px solid rgba(107, 114, 128, 0.2);
+  box-shadow: 
+    0 4px 15px rgba(107, 114, 128, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.glass-card-button-secondary:hover {
+  background: rgba(107, 114, 128, 0.12);
+  border-color: rgba(107, 114, 128, 0.3);
+}
+
+/* Floating map button - Cyan glass with glow */
+.glass-card-floating {
+  background: rgba(6, 182, 212, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 50%;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 
+    0 15px 40px rgba(6, 182, 212, 0.2),
+    0 0 20px rgba(6, 182, 212, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.glass-card-floating:hover {
+  background: rgba(6, 182, 212, 0.25);
+  box-shadow: 
+    0 20px 50px rgba(6, 182, 212, 0.3),
+    0 0 30px rgba(6, 182, 212, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* Dropdown arrow icons */
+.glass-card-dropdown-icon {
+  background: rgba(241, 241, 241, 0.22);
+  backdrop-filter: blur(21.9px);
+  -webkit-backdrop-filter: blur(21.9px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 49px;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Search icon positioning */
+.search-icon-absolute {
+  position: absolute;
+  left: 61.53%;
+  right: 36.81%;
+  top: 23.63%;
+  bottom: 74.02%;
+  background: #F1F1F1;
+}
+
+/* Calendar navigation arrows */
+.calendar-arrow-left {
+  position: absolute;
+  left: 60.97%;
+  right: 38.54%;
+  top: 36.52%;
+  bottom: 62.21%;
+  background: #F1F1F1;
+  transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+.calendar-arrow-right {
+  position: absolute;
+  left: 92.85%;
+  right: 6.67%;
+  top: 36.52%;
+  bottom: 62.21%;
+  background: #F1F1F1;
+}
+
+/* Dropdown arrow positioning */
+.dropdown-arrow-group {
+  position: absolute;
+  left: 70.07%;
+  right: 29.38%;
+  top: 74.9%;
+  bottom: 23.54%;
+  background: rgba(241, 241, 241, 0.54);
+  transform: matrix(0, 1, 1, 0, 0, 0);
+}
+
+.dropdown-arrow-occasion {
+  position: absolute;
+  left: 92.01%;
+  right: 7.43%;
+  top: 74.9%;
+  bottom: 23.54%;
+  background: rgba(241, 241, 241, 0.54);
+  transform: matrix(0, 1, 1, 0, 0, 0);
 }

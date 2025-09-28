@@ -110,11 +110,7 @@ function AppRoutes() {
         <Route path="/how-it-works" element={<PublicRoute><HowItWorks /></PublicRoute>} />
         
         {/* Protected Routes */}
-        <Route path="/home" element={
-          <SmartRoute>
-            <Home />
-          </SmartRoute>
-        } />
+        <Route path="/home" element={<Home />} />
         
         <Route path="/dashboard" element={
           <SmartRoute>
@@ -132,9 +128,6 @@ function AppRoutes() {
         
         {/* Test route to check if Quiz loads */}
         <Route path="/test-quiz" element={<Quiz />} />
-        
-        {/* Test route to check if Home loads */}
-        <Route path="/test-home" element={<Home />} />
         
         <Route path="/plan-trip" element={
           <SmartRoute>

@@ -129,12 +129,6 @@ const Landing: React.FC = () => {
             </div>
           
 
-            {/* Divider */}
-            <div className="flex items-center my-8">
-              <hr className="flex-1 border-white border-t-2" />
-              <span className="px-4 text-white/70 text-sm" style={{ fontSize: "1rem", color: "#f1f1f1" }}>or</span>
-              <hr className="flex-1 border-white border-t-2" />
-            </div>
 
             {/* Google button */}
             <Button className="w-full flex items-center justify-center bg-transparent text-white hover:bg-white/10 py-4 text-lg font-medium rounded-lg transition-all">
