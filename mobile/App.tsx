@@ -16,6 +16,8 @@ import ItineraryScreen from '@screens/Itinerary';
 import ProfileScreen from '@screens/Profile';
 import GlobeScreen from '@screens/Globe';
 import ResultsScreen from '@screens/Results';
+import PlanningScreen from '@screens/Planning';
+import JapanPlanningScreen from '@screens/JapanPlanning';
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +76,8 @@ export default function App() {
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="Globe" component={GlobeScreen} />
             <Stack.Screen name="Results" component={ResultsScreen} />
+            <Stack.Screen name="Planning" component={PlanningScreen} />
+            <Stack.Screen name="JapanPlanning" component={JapanPlanningScreen} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar style="auto" />

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Globe from 'react-globe.gl';
+import { useNavigation } from '@react-navigation/native';
 
 interface TripData {
   id: string;
@@ -12,6 +13,7 @@ interface TripData {
 
 const WebGlobe: React.FC = () => {
   const globeRef = useRef<any>(null);
+  const navigation = useNavigation<any>();
   const [size, setSize] = useState<{ width: number; height: number }>({
     width: typeof window !== 'undefined' ? window.innerWidth : 1200,
     height: typeof window !== 'undefined' ? window.innerHeight : 800,
@@ -91,12 +93,16 @@ const WebGlobe: React.FC = () => {
             >
               ×
             </button>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, cursor: 'pointer' }} onClick={() => {
+              if (selected.location.toLowerCase().includes('tokyo') || selected.location.toLowerCase().includes('japan')) {
+                navigation.navigate('JapanPlanning');
+              }
+            }}>
               <div style={{ fontSize: 20, fontWeight: 800 }}>{selected.location}</div>
               <div style={{ opacity: 0.85 }}>Occasion: {selected.occasion}</div>
               <div style={{ opacity: 0.85 }}>Duration: {selected.duration} days</div>
               <div style={{ marginTop: 8, fontSize: 12, opacity: 0.75 }}>
-                Tip: Click outside or the × to close.
+                Tip: Click this card to open Japan planning.
               </div>
             </div>
           </div>

@@ -27,7 +27,7 @@ const Home: React.FC = () => {
   const [budget, setBudget] = useState('');
 
   const onGenerate = () => {
-    navigation.navigate('Itinerary');
+    navigation.navigate('Planning');
   };
 
   const onReset = () => {
