@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Plus, MapPin, Search } from 'lucide-react';
 import Calendar from 'react-calendar';
@@ -7,6 +8,7 @@ import '../calendar.css';
 import GlobeComponent from '../components/3D/Globe';
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const [tripData, setTripData] = useState({
     destination: '',
     groupSize: 'Family',
@@ -20,6 +22,7 @@ const Home: React.FC = () => {
   const handleStartPlanning = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Starting trip planning with data:', tripData);
+    navigate('/trip-plan');
   };
 
   return (

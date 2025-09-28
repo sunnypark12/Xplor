@@ -4,16 +4,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View } from 'react-native';
 import { AuthProvider, useAuth } from './src/contexts/AuthContext';
 import { TravelProvider } from './src/contexts/TravelContext';
-import LandingScreen from './src/screens/Landing';
-import LoginScreen from './src/screens/Login';
-import RegisterScreen from './src/screens/Register';
-import HowItWorksScreen from './src/screens/HowItWorks';
-import HomeScreen from './src/screens/Home';
-import DashboardScreen from './src/screens/Dashboard';
-import QuizScreen from './src/screens/Quiz';
-import TripPlanningScreen from './src/screens/TripPlanning';
-import ItineraryScreen from './src/screens/Itinerary';
-import ProfileScreen from './src/screens/Profile';
+import LandingScreen from '@screens/Landing';
+import LoginScreen from '@screens/Login';
+import RegisterScreen from '@screens/Register';
+import HowItWorksScreen from '@screens/HowItWorks';
+import HomeScreen from '@screens/Home';
+import DashboardScreen from '@screens/Dashboard';
+import QuizScreen from '@screens/Quiz';
+import TripPlanningScreen from '@screens/TripPlanning';
+import ItineraryScreen from '@screens/Itinerary';
+import ProfileScreen from '@screens/Profile';
+import GlobeScreen from '@screens/Globe';
+import ResultsScreen from '@screens/Results';
 
 const Stack = createNativeStackNavigator();
 
@@ -70,6 +72,8 @@ export default function App() {
               </Smart>
             )} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
+            <Stack.Screen name="Globe" component={GlobeScreen} />
+            <Stack.Screen name="Results" component={ResultsScreen} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar style="auto" />

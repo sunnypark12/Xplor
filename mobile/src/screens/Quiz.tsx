@@ -10,13 +10,59 @@ const Quiz: React.FC = () => {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
 
+  // Updated 5Q with overlapping personality mappings
   const questions = [
-    { id: 'adventureLevel', title: "What's your ideal vacation vibe?", options: ['low', 'medium', 'high'] },
-    { id: 'explorationStyle', title: 'What gets you most excited when traveling?', options: ['foodie', 'cultural', 'nature', 'mixed'] },
-    { id: 'budgetLevel', title: 'How do you prefer to spend on travel?', options: ['budget', 'moderate', 'luxury'] },
-    { id: 'pacePreference', title: "What's your preferred travel pace?", options: ['slow', 'moderate', 'fast'] },
-    { id: 'groupDynamic', title: 'Who do you usually travel with?', options: ['solo', 'couple', 'family', 'friends'] }
-  ];
+    {
+      id: 'q1',
+      title: 'Arrival – You’ve just landed and dropped your bags. What’s your first move?',
+      options: [
+        { id: 'A', label: 'A. Wander to a café or quiet corner to soak it all in.', personalities: ['Hidden Gem Hunter', 'Family Traveler'] },
+        { id: 'B', label: 'B. Head straight to a landmark or museum.', personalities: ['Cultural Explorer'] },
+        { id: 'C', label: 'C. Find the nearest food street or market.', personalities: ['Culinary Explorer'] },
+        { id: 'D', label: 'D. Hunt down a hidden trail, lookout, or spontaneous adventure.', personalities: ['Thrill Seeker', 'Budget Backpacker'] },
+      ]
+    },
+    {
+      id: 'q2',
+      title: 'Midday Energy – The afternoon is open. Where are you going?',
+      options: [
+        { id: 'A', label: 'A. A local workshop, festival, or heritage street.', personalities: ['Cultural Explorer'] },
+        { id: 'B', label: 'B. An outdoor adventure—hike, kayak, surf, or cycle.', personalities: ['Thrill Seeker', 'Budget Backpacker'] },
+        { id: 'C', label: 'C. A bustling market or food crawl.', personalities: ['Culinary Explorer'] },
+        { id: 'D', label: 'D. A spa, rooftop pool, or beach lounger.', personalities: ['Luxe Unwinder'] },
+      ]
+    },
+    {
+      id: 'q3',
+      title: 'A Curveball – Your planned stop is unexpectedly closed. What do you do?',
+      options: [
+        { id: 'A', label: 'A. Bookstore, teahouse, or easy stroll.', personalities: ['Hidden Gem Hunter', 'Family Traveler'] },
+        { id: 'B', label: 'B. Ask a local for a hidden gem and pivot.', personalities: ['Hidden Gem Hunter'] },
+        { id: 'C', label: 'C. Upgrade: private guide, luxe meal, or spa instead.', personalities: ['Luxe Unwinder'] },
+        { id: 'D', label: 'D. Find another thrill—improvise with an adventure.', personalities: ['Thrill Seeker', 'Social Connector'] },
+      ]
+    },
+    {
+      id: 'q4',
+      title: 'Golden Hour – It’s sunset. What’s your scene?',
+      options: [
+        { id: 'A', label: 'A. Picnic in a quiet park or beach.', personalities: ['Family Traveler', 'Hidden Gem Hunter'] },
+        { id: 'B', label: 'B. Rooftop or city panorama spot.', personalities: ['Social Connector'] },
+        { id: 'C', label: 'C. Sunset hike, cliff, or boat ride.', personalities: ['Thrill Seeker', 'Budget Backpacker'] },
+        { id: 'D', label: 'D. Dinner at a renowned spot timed for views.', personalities: ['Culinary Explorer', 'Luxe Unwinder'] },
+      ]
+    },
+    {
+      id: 'q5',
+      title: 'Tomorrow’s Big Ticket – You can only lock one thing for tomorrow:',
+      options: [
+        { id: 'A', label: 'A. A guided cultural or historic experience.', personalities: ['Cultural Explorer'] },
+        { id: 'B', label: 'B. A cooking class, winery, or food market.', personalities: ['Culinary Explorer'] },
+        { id: 'C', label: 'C. An adrenaline rush—surf, trek, canyon, climb.', personalities: ['Thrill Seeker', 'Budget Backpacker'] },
+        { id: 'D', label: 'D. A day of full comfort—resort, spa, or leisure.', personalities: ['Luxe Unwinder'] },
+      ]
+    },
+  ] as const;
 
   const onSelect = (value: string) => {
     const current = questions[step];
@@ -26,16 +72,43 @@ const Quiz: React.FC = () => {
   };
 
   const onSubmit = async (all: Record<string, string>) => {
+    const tally: Record<string, number> = {};
+    questions.forEach((q, idx) => {
+      const sel = all[q.id];
+      const opt = q.options.find(o => o.id === sel);
+      if (opt) {
+        opt.personalities.forEach(p => { tally[p] = (tally[p] || 0) + 1; });
+      }
+      // keep q1 for tie-breaker reference
+      if (idx === 0 && opt) tally['__q1__'] = q.options.findIndex(o => o.id === sel);
+    });
+    // find top personality
+    let top: string | null = null;
+    let max = -1;
+    for (const key of Object.keys(tally)) {
+      if (key === '__q1__') continue;
+      if (tally[key] > max) { max = tally[key]; top = key; }
+      else if (tally[key] === max) {
+        // tie: prefer first instinct from q1 if one of tied equals q1 personality
+        const q1Sel = all['q1'];
+        const q1Opt = questions[0].options.find(o => o.id === q1Sel);
+        const q1IsKey = q1Opt ? (q1Opt.personalities as readonly string[]).includes(key) : false;
+        if (q1IsKey) top = key;
+      }
+    }
+    const personality = top || 'Cultural Explorer';
+
     const profile: TravelProfile = {
-      adventureLevel: (all.adventureLevel as any) || 'medium',
-      explorationStyle: (all.explorationStyle as any) || 'mixed',
-      budgetLevel: (all.budgetLevel as any) || 'moderate',
-      pacePreference: (all.pacePreference as any) || 'moderate',
-      groupDynamic: (all.groupDynamic as any) || 'solo',
+      adventureLevel: 'medium',
+      explorationStyle: 'mixed',
+      budgetLevel: 'moderate',
+      pacePreference: 'moderate',
+      groupDynamic: 'friends',
+      personality,
       createdAt: new Date()
     };
     await saveTravelProfile(profile);
-    navigation.navigate('Dashboard');
+    navigation.navigate('Results', { personality });
   };
 
   const q = questions[step];
@@ -47,8 +120,8 @@ const Quiz: React.FC = () => {
         <View style={{ height: 12, borderRadius: 8, backgroundColor: '#2563eb', width: `${((step + 1) / questions.length) * 100}%` }} />
       </View>
       {q.options.map(opt => (
-        <TouchableOpacity key={opt} style={styles.opt} onPress={() => onSelect(opt)} disabled={loading}>
-          <Text style={styles.optText}>{opt}</Text>
+        <TouchableOpacity key={opt.id} style={styles.opt} onPress={() => onSelect(opt.id)} disabled={loading}>
+          <Text style={styles.optText}>{opt.label}</Text>
         </TouchableOpacity>
       ))}
     </View>

@@ -136,13 +136,9 @@ function AppRoutes() {
         {/* Test route to check if Home loads */}
         <Route path="/test-home" element={<Home />} />
         
-        <Route path="/plan-trip" element={
-          <SmartRoute>
-            <Layout>
-              <TripPlanning />
-            </Layout>
-          </SmartRoute>
-        } />
+        {/* Public trip planning routes */}
+        <Route path="/trip-plan" element={<TripPlanning />} />
+        <Route path="/plan-trip" element={<TripPlanning />} />
         
         <Route path="/itinerary/:id" element={
           <SmartRoute>

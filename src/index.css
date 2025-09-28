@@ -884,6 +884,17 @@ body:has(.signup-page) {
   background-color: transparent !important;
 }
 
+/* Override global background for TripPlanning page */
+@supports selector(body:has(*)) {
+  body:has(.tripplanning-page) {
+    background-image: url('./image 21.png') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+  }
+}
+
 /* Unique Glass Card Designs */
 
 /* Main background card - Deep glass with strong blur */
@@ -1079,6 +1090,75 @@ body:has(.signup-page) {
     0 0 30px rgba(6, 182, 212, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   transform: translateY(-3px) scale(1.05);
+}
+
+/* TripPlanning specific helpers */
+.tab-pill {
+  background: rgba(255, 255, 255, 0.15);
+  color: #f1f1f1;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 8px 16px;
+  border-radius: 9999px;
+  transition: background var(--transition-fast);
+}
+
+.tab-pill-active {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.trip-action-ribbon {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(239, 68, 68, 0.15) 60%, rgba(239, 68, 68, 0.25));
+}
+
+.trip-action-ribbon .action-link {
+  color: #ffd7d7;
+  text-decoration: underline;
+  font-size: 0.95rem;
+}
+
+.tripplanning-page button {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+}
+
+/* Sliding action panel that expands below an activity card */
+.trip-action-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 250ms ease, padding 250ms ease, margin 250ms ease;
+}
+
+.trip-action-panel.open {
+  max-height: 120px; /* big enough for the content */
+  padding: 10px 20px;
+  margin-top: -8px;
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.25));
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.trip-action-panel .panel-inner {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.trip-action-panel .action-text {
+  color: #ffd7d7;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.95rem;
 }
 
 /* Dropdown arrow icons */

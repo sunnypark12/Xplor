@@ -15,6 +15,7 @@ export interface TravelProfile {
   budgetLevel: 'budget' | 'moderate' | 'luxury';
   pacePreference: 'slow' | 'moderate' | 'fast';
   groupDynamic: 'solo' | 'couple' | 'family' | 'friends';
+  personality?: string;
   createdAt: Date;
 }
 
