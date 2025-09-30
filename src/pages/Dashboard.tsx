@@ -144,7 +144,7 @@ const Dashboard: React.FC = () => {
           {/* User Persona */}
           <div className="text-white">
             <p className="play-regular text-sm mb-2" style={{ color: "#f1f1f1", fontSize: "1rem", marginTop: "8px" }}>You are the:</p>
-            <p className="play-regular text-lg mb-4" style={{ color: "#f1f1f1", fontSize: "1.5rem", marginTop: "-2px" }}>The Budget Backpacker</p>
+            <p className="play-regular text-lg mb-4" style={{ color: "#f1f1f1", fontSize: "1.5rem", marginTop: "-2px" }}>The Thrill Seeker</p>
             <Link to="/quiz">
               <button className="glass-card play-regular px-4 py-2 rounded-lg transition hover:bg-white/20"
               style={{ color: "#f1f1f1", fontSize: "1.1rem", marginTop: "8px", width: "60%", height: "40px", marginBottom: "8px" }}>
@@ -157,7 +157,7 @@ const Dashboard: React.FC = () => {
           <div className="text-white">
             <Link to="/home">
               <button className="glass-card play-regular px-4 py-2 rounded-lg transition hover:bg-white/20"
-              style={{ color: "#f1f1f1", fontSize: "1.1rem", marginTop: "8px", width: "80%", height: "40px", marginBottom: "8px", backgroundColor: "rgba(255, 255, 255, 0.1)" }}>
+              style={{ color: "#f1f1f1", fontSize: "1.1rem", marginTop: "8px", width: "90%", height: "40px", marginBottom: "8px", backgroundColor: "rgba(255, 255, 255, 0.1)" }}>
                 Start New Adventure!
               </button>
             </Link>
