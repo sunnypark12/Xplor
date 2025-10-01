@@ -7,14 +7,14 @@ import { useAuth } from './contexts/AuthContext';
 
 // Import pages
 import Landing from './pages/Landing';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
+import SignUp from './pages/SignUp';
+import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Quiz from './pages/Quiz';
 import TripPlanning from './pages/TripPlanning';
+import PlannedTrip from './pages/PlannedTrip';
 import Itinerary from './pages/Itinerary';
 import HowItWorks from './pages/HowItWorks';
-import Profile from './pages/Profile';
 
 // Layout component
 import Layout from './components/layout/Layout';
@@ -29,7 +29,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }
   
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
   
   return <>{children}</>;
@@ -44,7 +44,7 @@ const SmartRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
   
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
   
   // Debug: Log user state
@@ -102,11 +102,16 @@ function AppRoutes() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<PublicRoute><Landing /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
         <Route path="/how-it-works" element={<PublicRoute><HowItWorks /></PublicRoute>} />
         
         {/* Protected Routes */}
+        <Route path="/home" element={
+          <SmartRoute>
+            <Home />
+          </SmartRoute>
+        } />
+        
         <Route path="/dashboard" element={
           <SmartRoute>
             <Layout>
@@ -124,6 +129,13 @@ function AppRoutes() {
         {/* Test route to check if Quiz loads */}
         <Route path="/test-quiz" element={<Quiz />} />
         
+        {/* Test route for PlannedTrip */}
+        <Route path="/test-planned-trip" element={
+          <Layout>
+            <PlannedTrip />
+          </Layout>
+        } />
+        
         <Route path="/plan-trip" element={
           <SmartRoute>
             <Layout>
@@ -140,13 +152,22 @@ function AppRoutes() {
           </SmartRoute>
         } />
         
-        <Route path="/profile" element={
+        <Route path="/itinerary/current" element={
           <SmartRoute>
             <Layout>
-              <Profile />
+              <TripPlanning />
             </Layout>
           </SmartRoute>
         } />
+        
+        <Route path="/planned-trip" element={
+          <SmartRoute>
+            <Layout>
+              <PlannedTrip />
+            </Layout>
+          </SmartRoute>
+        } />
+        
         
         {/* Catch all route */}
         <Route path="*" element={<Navigate to="/" />} />

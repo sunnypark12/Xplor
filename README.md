@@ -1,207 +1,239 @@
-# Xplor - Smart Travel Planning & Itinerary Agent
+# Xplor - AI-Powered Travel Planning Platform
 
-> **Personalized, adaptive travel itinerary app that evolves with the traveler in real-time**
+Xplor is an intelligent travel planning platform that combines advanced AI with comprehensive travel data to create personalized, adaptive itineraries. The platform features a React frontend with a Python FastAPI backend powered by OpenAI's GPT models.
 
-Xplor is an intelligent travel assistant that makes planning seamless, adapts in real-time, and personalizes experiences based on each traveler's style. No more static itineraries - your travel plans evolve with you as your trip unfolds!
+## 🌟 Features
 
-## Features
+### Frontend Features
+- **Interactive Date Range Picker**: Drag and tap to select travel dates with intuitive calendar interface
+- **Personalized Travel Profiles**: Quiz-based system to understand user preferences
+- **Real-time Itinerary Display**: Beautiful, user-friendly itinerary presentation with tabs for different views
+- **AI Recommendations**: Dedicated section showing AI-generated travel insights and tips
+- **Budget Breakdown**: Visual budget analysis with category-wise spending
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-### V1 (MVP) Features
-- **Account Creation & Authentication** - Secure user registration with Firebase Auth
-- **Personality-Style Travel Quiz** - Understand traveler preferences and create personalized profiles
-- **Trip Input & Details Collection** - Comprehensive trip planning with destinations, dates, and constraints
-- **Personalized Itinerary Generator** - AI-powered itinerary creation based on user profiles
-- **Real-Time Adaptive Itinerary** - Location tracking and automatic schedule adjustments
+### Backend Features
+- **Advanced AI Prompt Engineering**: Sophisticated prompts for personalized travel recommendations
+- **Multi-Dataset Integration**: Combines Kaggle, HuggingFace, and Firebase data sources
+- **Recommendation Engine**: Hybrid system using content-based, collaborative, and popularity-based filtering
+- **Real-time API**: FastAPI backend with comprehensive endpoints
+- **Data Processing**: Intelligent parsing of AI responses into structured itinerary data
 
-### V2 (Future) Features
-- **Community Itinerary Sharing** - Share and discover travel plans from other users
-- **Quest & Rewards System** - Gamified travel with badges and achievements
-- **Contextual Outfit Suggestions** - Weather and activity-based packing recommendations
+### AI Capabilities
+- **Personalized Recommendations**: Based on user travel profile and preferences
+- **Comprehensive Itinerary Planning**: Day-by-day detailed planning with timing and logistics
+- **Budget Optimization**: Smart budget allocation and money-saving suggestions
+- **Cultural Intelligence**: Local customs, etiquette, and cultural insights
+- **Real-time Adaptation**: Dynamic itinerary adjustments based on user location and pace
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
-- Firebase project (for authentication and database)
+- Node.js 16+ and npm
+- Python 3.8+
+- OpenAI API key
+- Firebase project (optional)
 
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd Xplor
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   # Copy the example environment file
-   cp .env.local.example .env.local
-   
-   # Edit .env.local with your Firebase configuration
-   ```
-
-4. **Configure Firebase**
-   - Create a Firebase project at https://console.firebase.google.com/
-   - Enable Authentication (Email/Password)
-   - Enable Firestore Database
-   - Copy your Firebase config values to `.env.local`
-
-5. **Start the development server**
-   ```bash
-   npm start
-   ```
-
-6. **Open your browser**
-   Navigate to http://localhost:3000
-
-## Project Structure
-
-```
-src/
-├── components/           # Reusable UI components
-│   ├── common/          # Generic components (Button, Input, etc.)
-│   └── layout/          # Layout components (Navbar, Sidebar)
-├── contexts/            # React Context providers
-│   ├── AuthContext.tsx  # Authentication state management
-│   └── TravelContext.tsx # Travel data and itinerary management
-├── pages/               # Main application pages
-│   ├── auth/           # Authentication pages (Login, Register)
-│   ├── Dashboard.tsx   # User dashboard
-│   ├── Quiz.tsx        # Travel personality quiz
-│   ├── TripPlanning.tsx # Trip input and planning
-│   ├── Itinerary.tsx   # Itinerary display and management
-│   └── Profile.tsx     # User profile and settings
-├── types/              # TypeScript type definitions
-├── config/             # Configuration files (Firebase, etc.)
-└── App.tsx             # Main application component
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd Xplor
 ```
 
-## Environment Variables
+### 2. Start the Backend
+```bash
+./start-backend.sh
+```
 
-Create a `.env.local` file in the root directory with the following variables:
+This script will:
+- Create a Python virtual environment
+- Install all dependencies
+- Set up environment variables
+- Start the AI backend server on http://localhost:8000
 
+### 3. Start the Frontend
+```bash
+./start-frontend.sh
+```
+
+This script will:
+- Install Node.js dependencies
+- Set up environment configuration
+- Start the React development server on http://localhost:3000
+
+### 4. Configure API Keys
+
+Edit `ai/.env` file with your API keys:
 ```env
-# Firebase Configuration
-REACT_APP_FIREBASE_API_KEY=your_api_key_here
-REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-REACT_APP_FIREBASE_APP_ID=your_app_id
-REACT_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id
-
-# API Keys (for future integrations)
-REACT_APP_GOOGLE_MAPS_API_KEY=your_google_maps_key
-REACT_APP_WEATHER_API_KEY=your_weather_api_key
+OPENAI_API_KEY=your_openai_api_key_here
+FIREBASE_PROJECT_ID=your_firebase_project_id
+KAGGLE_USERNAME=your_kaggle_username
+KAGGLE_KEY=your_kaggle_api_key
+HF_TOKEN=your_huggingface_token
 ```
 
-## Tech Stack
+## 📁 Project Structure
 
-- **Frontend**: React 18 with TypeScript
-- **Styling**: Custom CSS with CSS Variables (Design System)
-- **Routing**: React Router v6
-- **Authentication**: Firebase Auth
-- **Database**: Firestore
-- **State Management**: React Context API
-- **Forms**: React Hook Form
-- **Icons**: Lucide React
-- **Notifications**: React Hot Toast
-
-## User Flow
-
-1. **Landing Page** - Introduction to Xplor's features and benefits
-2. **Authentication** - Sign up or sign in to access the platform
-3. **Travel Quiz** - Complete personality assessment for personalized recommendations
-4. **Dashboard** - Overview of trips, statistics, and quick actions
-5. **Trip Planning** - Input destination, dates, and travel preferences
-6. **Itinerary Generation** - AI-powered creation of personalized daily plans
-7. **Real-Time Adaptation** - Location tracking and automatic schedule adjustments
-
-## Firebase Setup
-
-### Authentication Setup
-1. Go to Firebase Console → Authentication → Sign-in method
-2. Enable Email/Password authentication
-3. (Optional) Configure additional providers (Google, etc.)
-
-### Firestore Setup
-1. Go to Firebase Console → Firestore Database
-2. Create database in production mode
-3. Set up security rules:
-
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Users can only access their own data
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    
-    // Itineraries can only be accessed by the owner
-    match /itineraries/{itineraryId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-    }
-  }
-}
+```
+Xplor/
+├── ai/                          # Python Backend
+│   ├── agents/                  # AI Travel Agent
+│   │   └── travel_agent.py     # Main AI agent with prompt engineering
+│   ├── api/                     # FastAPI endpoints
+│   │   └── endpoints.py        # API routes and handlers
+│   ├── config/                  # Configuration
+│   │   └── settings.py         # Settings and environment variables
+│   ├── data_loaders/           # Data integration
+│   │   ├── kaggle_loader.py    # Kaggle dataset integration
+│   │   ├── huggingface_loader.py # HuggingFace dataset integration
+│   │   └── firebase_loader.py  # Firebase integration
+│   ├── models/                  # ML models
+│   │   └── recommendation_engine.py # Recommendation algorithms
+│   └── run_server.py           # Server startup script
+├── src/                        # React Frontend
+│   ├── components/             # React components
+│   │   ├── common/            # Reusable components
+│   │   │   ├── DateRangePicker.tsx # Enhanced calendar component
+│   │   │   ├── Button.tsx     # Button component
+│   │   │   └── Input.tsx      # Input component
+│   │   └── layout/            # Layout components
+│   ├── contexts/              # React contexts
+│   │   ├── AuthContext.tsx    # Authentication context
+│   │   └── TravelContext.tsx  # Travel data context with AI integration
+│   ├── pages/                 # Page components
+│   │   ├── TripPlanning.tsx   # Trip planning with enhanced calendar
+│   │   ├── Itinerary.tsx      # Enhanced itinerary display
+│   │   └── ...               # Other pages
+│   ├── services/              # API services
+│   │   └── api.ts            # API service with backend integration
+│   └── types/                 # TypeScript types
+│       └── index.ts          # Type definitions
+├── start-backend.sh           # Backend startup script
+├── start-frontend.sh          # Frontend startup script
+└── README.md                  # This file
 ```
 
-## Deployment
+## 🎯 Key Improvements Made
 
-### Build for Production
+### 1. Enhanced Calendar Component
+- **Drag and Tap Selection**: Users can drag across dates or tap to select date ranges
+- **Visual Feedback**: Hover states, range highlighting, and intuitive interactions
+- **Quick Actions**: Preset options for common date ranges
+- **Mobile Friendly**: Touch-optimized for mobile devices
+
+### 2. AI Integration and Prompt Engineering
+- **Sophisticated Prompts**: Comprehensive system prompts for personalized recommendations
+- **Structured Responses**: AI responses formatted with clear sections and actionable information
+- **Data Integration**: AI has access to multiple travel datasets for informed recommendations
+- **Personalization**: Recommendations based on user travel profiles and preferences
+
+### 3. Enhanced Itinerary Display
+- **Tabbed Interface**: Separate tabs for itinerary, AI recommendations, and budget
+- **AI Recommendations Section**: Dedicated display for AI insights and tips
+- **Budget Visualization**: Visual budget breakdown with category analysis
+- **Interactive Elements**: Expandable sections and detailed information display
+
+### 4. Backend Architecture
+- **FastAPI Integration**: Modern, fast API with automatic documentation
+- **Multi-Dataset Support**: Integration with Kaggle, HuggingFace, and Firebase
+- **Recommendation Engine**: Hybrid recommendation system with multiple algorithms
+- **Error Handling**: Comprehensive error handling and logging
+
+### 5. Frontend-Backend Connection
+- **API Service Layer**: Centralized API communication with error handling
+- **Real-time Updates**: Live integration between frontend and AI backend
+- **Data Parsing**: Intelligent parsing of AI responses into structured data
+- **Loading States**: User-friendly loading indicators and error messages
+
+## 🔧 API Endpoints
+
+### Travel Agent Endpoints
+- `POST /api/travel/ask` - Get personalized travel recommendations
+- `POST /api/itinerary/create` - Create detailed itinerary
+- `POST /api/recommendations` - Get destination recommendations
+- `GET /api/destinations/popular` - Get popular destinations
+- `POST /api/feedback` - Submit user feedback
+
+### Health and Status
+- `GET /` - Health check
+- `GET /api/datasets/status` - Check dataset loading status
+
+## 🎨 UI/UX Features
+
+### Calendar Component
+- Intuitive drag-to-select functionality
+- Visual range highlighting
+- Quick preset options (Today, Next 7 days)
+- Mobile-optimized touch interactions
+
+### Itinerary Display
+- Clean, organized daily breakdown
+- Activity categorization with color coding
+- Time-based scheduling with duration estimates
+- Progress tracking for active trips
+
+### AI Recommendations
+- Structured display of AI insights
+- Expandable detailed responses
+- Personalized tips and suggestions
+- Cultural and practical guidance
+
+## 🧪 Testing
+
+### Backend Testing
 ```bash
-npm run build
+cd ai
+python -m pytest tests/
 ```
 
-### Deploy to Firebase Hosting
+### Frontend Testing
 ```bash
-# Install Firebase CLI
-npm install -g firebase-tools
-
-# Login to Firebase
-firebase login
-
-# Initialize Firebase in your project
-firebase init
-
-# Deploy
-firebase deploy
+npm test
 ```
 
-## 🧪 Development
+### Integration Testing
+1. Start both backend and frontend servers
+2. Navigate to http://localhost:3000
+3. Complete the travel profile quiz
+4. Create a new trip with the enhanced calendar
+5. View the generated itinerary with AI recommendations
 
-### Available Scripts
-- `npm start` - Start development server
-- `npm run build` - Build for production
-- `npm test` - Run tests
-- `npm run eject` - Eject from Create React App
+## 🚀 Deployment
 
-### Code Style
-- TypeScript for type safety
-- Functional components with hooks
-- Custom CSS with BEM-like naming conventions
-- Responsive design mobile-first approach
+### Backend Deployment
+- Configure environment variables for production
+- Use a production WSGI server like Gunicorn
+- Set up proper database connections
+- Configure CORS for your domain
 
-## Contributing
+### Frontend Deployment
+- Build the React app: `npm run build`
+- Deploy to your preferred hosting service
+- Update API_URL environment variable
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
 
-## Support
+## 🆘 Support
 
-For support and questions:
-- Create an issue on GitHub
-- Contact the development team
+If you encounter any issues:
+
+1. Check the console logs for error messages
+2. Ensure all API keys are properly configured
+3. Verify that both servers are running
+4. Check the API documentation at http://localhost:8000/docs
+
+For additional support, please create an issue in the repository.
+
+---
+
+**Happy Traveling with Xplor! 🌍✈️**
