@@ -2,7 +2,7 @@
 
 Xplor is an intelligent travel planning platform that combines advanced AI with comprehensive travel data to create personalized, adaptive itineraries. The platform features a React frontend with a Python FastAPI backend powered by OpenAI's GPT models.
 
-## 🌟 Features
+## Features
 
 ### Frontend Features
 - **Interactive Date Range Picker**: Drag and tap to select travel dates with intuitive calendar interface
@@ -26,7 +26,7 @@ Xplor is an intelligent travel planning platform that combines advanced AI with 
 - **Cultural Intelligence**: Local customs, etiquette, and cultural insights
 - **Real-time Adaptation**: Dynamic itinerary adjustments based on user location and pace
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js 16+ and npm
@@ -113,7 +113,7 @@ Xplor/
 └── README.md                  # This file
 ```
 
-## 🎯 Key Improvements Made
+## Key Improvements Made
 
 ### 1. Enhanced Calendar Component
 - **Drag and Tap Selection**: Users can drag across dates or tap to select date ranges
@@ -145,7 +145,7 @@ Xplor/
 - **Data Parsing**: Intelligent parsing of AI responses into structured data
 - **Loading States**: User-friendly loading indicators and error messages
 
-## 🔧 API Endpoints
+## API Endpoints
 
 ### Travel Agent Endpoints
 - `POST /api/travel/ask` - Get personalized travel recommendations
@@ -158,7 +158,7 @@ Xplor/
 - `GET /` - Health check
 - `GET /api/datasets/status` - Check dataset loading status
 
-## 🎨 UI/UX Features
+## UI/UX Features
 
 ### Calendar Component
 - Intuitive drag-to-select functionality
@@ -178,7 +178,7 @@ Xplor/
 - Personalized tips and suggestions
 - Cultural and practical guidance
 
-## 🧪 Testing
+## Testing
 
 ### Backend Testing
 ```bash
@@ -198,7 +198,7 @@ npm test
 4. Create a new trip with the enhanced calendar
 5. View the generated itinerary with AI recommendations
 
-## 🚀 Deployment
+## Deployment
 
 ### Backend Deployment
 - Configure environment variables for production
@@ -211,7 +211,7 @@ npm test
 - Deploy to your preferred hosting service
 - Update API_URL environment variable
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -219,11 +219,11 @@ npm test
 4. Add tests if applicable
 5. Submit a pull request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
-## 🆘 Support
+## Support
 
 If you encounter any issues:
 
