@@ -6,7 +6,7 @@
 
 ```bash
 # Navigate to the project directory
-cd /Users/sunho/Documents/Xplor
+cd /Users/Documents/Xplor
 
 # Make the startup script executable (if not already done)
 chmod +x start-backend.sh
@@ -27,7 +27,7 @@ Open a new terminal window:
 
 ```bash
 # Navigate to the project directory
-cd /Users/sunho/Documents/Xplor
+cd /Users/Documents/Xplor
 
 # Make the startup script executable (if not already done)
 chmod +x start-frontend.sh
